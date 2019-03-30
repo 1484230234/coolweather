@@ -2,6 +2,7 @@ package com.example.pc.coolweather;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,7 @@ public class ChooseAreaFragment extends Fragment {
 
     public static final int LEVEL_CITY = 1;
 
-    public static final int LEVEL_County = 2;
+    public static final int LEVEL_COUNTY = 2;
 
     private ProgressDialog progressDialog;
 
@@ -107,13 +108,19 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectCity = cityList.get(position);
                     queryCounties();
+                }else if (currentLevel == LEVEL_COUNTY) {
+                    String weatherId = countyList.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id", weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (currentLevel == LEVEL_County) {
+                if (currentLevel == LEVEL_COUNTY) {
                     queryCities();
                 } else if (currentLevel == LEVEL_CITY) {
                     queryProvinces();
@@ -181,7 +188,7 @@ public class ChooseAreaFragment extends Fragment {
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
-            currentLevel = LEVEL_County;
+            currentLevel = LEVEL_COUNTY;
         } else {
             int provinceCode = selectProvince.getProvinceCode();
             int cityCode = selectCity.getCityCode();
